@@ -13,23 +13,29 @@ spec:
         app: demo
     spec:
       containers:
-      - name: demo-container
-        image: busybox
-        command: ["sh", "-c", "env && sleep 3600"]
-        env:
-        - name: APP_MODE
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: APP_MODE
-        - name: APP_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: APP_PORT
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: DB_PASSWORD
+        - name: demo-container
+          image: nginx
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: APP_ENV
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_PASSWORD
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: secret-volume
+              mountPath: /etc/secret
+      volumes:
+        - name: config-volume
+          configMap:
+            name: app-config
+        - name: secret-volume
+          secret:
+            secretName: app-secret
 

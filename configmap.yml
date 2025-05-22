@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: app-config
 data:
-  APP_MODE: "production"
+  APP_ENV: "production"
   APP_PORT: "5000"
 
